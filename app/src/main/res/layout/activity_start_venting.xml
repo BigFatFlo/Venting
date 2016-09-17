@@ -7,24 +7,30 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.florentremis.venting.MainActivity">
+    tools:context="com.example.florentremis.venting.StartVentingActivity">
 
-    <Button
-        android:id="@+id/start_venting_button"
+    <TextView
+        android:id="@+id/choose_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_centerHorizontal="true"
-        android:text="Start venting!"
-        android:onClick="startVenting"/>
+        android:text="Choose a title for your Vent Room" />
+
+    <EditText
+        android:id="@+id/title_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLength="100"
+        android:layout_below="@id/choose_title" />
 
     <Button
-        android:id="@+id/help_venting_button"
+        android:id="@+id/start_vent_room_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/start_venting_button"
-        android:text="Help someone vent"
-        android:onClick="helpVent"/>
+        android:layout_below="@id/title_edit_text"
+        android:text="Start Vent Room"
+        android:onClick="startVentRoom"/>
 
 </RelativeLayout>

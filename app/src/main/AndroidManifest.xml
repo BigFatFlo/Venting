@@ -15,6 +15,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity android:name=".StartVentingActivity">
+        </activity>
+        <activity android:name=".EnterInfosActivity">
+        </activity>
+        <activity android:name=".VentRoomActivity">
+        </activity>
+        <activity android:name=".ViewVentRoomsActivity">
+        </activity>
     </application>
 
 </manifest>

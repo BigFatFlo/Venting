@@ -10,7 +10,7 @@ public class VentRoomActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_venting);
+        setContentView(R.layout.activity_vent_room);
     }
 
 }

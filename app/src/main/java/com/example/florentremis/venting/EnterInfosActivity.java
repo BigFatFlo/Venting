@@ -10,7 +10,7 @@ public class EnterInfosActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_enter_infos);
     }
 
     public void viewVentRooms(View view) {

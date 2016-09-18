@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,11 +24,13 @@ public class StartVentingActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     int i = 0;
     private FirebaseUser user;
+    public EditText ventRoomTitleEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_venting);
+        ventRoomTitleEdit = (EditText) findViewById(R.id.title_edit_text);
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -46,19 +49,30 @@ public class StartVentingActivity extends AppCompatActivity {
 
     public void startVentRoom(View view) {
         if (user != null) {
-            // Write a message to the database
-            Log.d(TAG, "button clicked");
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("message");
-            myRef.setValue("Hello, World!" + String.valueOf(i++));
-            String ventRoomId = "Id";
-            Log.d(TAG, "here");
+            if (ventRoomTitleEdit.getText().length() > 10) {
+                if (ventRoomTitleEdit.getText().length() < 100) {
+                    openNewVentRoom(user.getUid(), ventRoomTitleEdit.getText().toString(), System.currentTimeMillis()/1000);
 //        Intent startVentRoomIntent = new Intent(StartVentingActivity.this, VentRoomActivity.class);
 //        startVentRoomIntent.putExtra("ventRoomId", ventRoomId);
 //        startActivity(startVentRoomIntent);
+                } else {
+                    Toast.makeText(StartVentingActivity.this, "Title too long (more than 100 characters",
+                            Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(StartVentingActivity.this, "Title too short (less than 10 characters)",
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
             Log.d(TAG, "Anonymous login failed");
         }
+    }
+
+    public void openNewVentRoom(String userId, String title, Long currentTime) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("ventRooms").child(userId).child("venterId").setValue(userId);
+        mDatabase.child("ventRooms").child(userId).child("title").setValue(title);
+        mDatabase.child("ventRooms").child(userId).child("creationTime").setValue(currentTime);
     }
 
     @Override

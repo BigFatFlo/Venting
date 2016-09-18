@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "990082591722",
+    "firebase_url": "https://venting-a3ee7.firebaseio.com",
+    "project_id": "venting-a3ee7",
+    "storage_bucket": "venting-a3ee7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990082591722:android:9eac6674f70b2648",
+        "android_client_info": {
+          "package_name": "com.example.florentremis.venting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "990082591722-kfvf4j8po79e61395g3955dfvvjptp1i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQRB8LcG5vLtauUhAuuKrj2VhmyeXzz_8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -35,14 +35,14 @@ public class StartVentingActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
+            user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                // User is signed in
+                Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+            } else {
+                // User is signed out
+                Log.d(TAG, "onAuthStateChanged:signed_out");
+            }
             }
         };
     }
@@ -70,9 +70,9 @@ public class StartVentingActivity extends AppCompatActivity {
 
     public void openNewVentRoom(String userId, String title, Long currentTime) {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("ventRooms").child(userId).child("venterId").setValue(userId);
-        mDatabase.child("ventRooms").child(userId).child("title").setValue(title);
-        mDatabase.child("ventRooms").child(userId).child("creationTime").setValue(currentTime);
+        mDatabase.child("ventRooms").child(String.valueOf(currentTime) + userId).child("title").setValue(title);
+        mDatabase.child("ventRooms").child(String.valueOf(currentTime) + userId).child("creationTime").setValue(currentTime);
+        mDatabase.child("ventRooms").child(String.valueOf(currentTime) + userId).child("venterId").setValue(userId);
     }
 
     @Override

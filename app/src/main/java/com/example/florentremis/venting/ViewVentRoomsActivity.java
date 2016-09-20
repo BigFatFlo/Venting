@@ -29,13 +29,14 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     public static final String VENTROOMS_CHILD = "ventRooms";
-    private RecyclerView mVentRoomRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
+    private RecyclerView mVentRoomsRecyclerView;
     private FirebaseRecyclerAdapter<ShortVentRoom, ShortVentRoomViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
+    private static String userName = null;
 
     public static class ShortVentRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView ventRoomTitleTextView;
+        public String ventRoomId;
 
         public ShortVentRoomViewHolder(View v) {
             super(v);
@@ -45,10 +46,13 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            String title = ((TextView) v.findViewWithTag("ventRoomItem")).getText().toString();
-            Intent ventRoomIntent = new Intent(mContext, VentRoomActivity.class);
-            ventRoomIntent.putExtra("ventRoomTitle", title);
-            mContext.startActivity(ventRoomIntent);
+            if (userName != null) {
+                String title = ((TextView) v.findViewWithTag("ventRoomItem")).getText().toString();
+                Intent ventRoomIntent = new Intent(mContext, VentRoomActivity.class);
+                ventRoomIntent.putExtra("ventRoomId", ventRoomId);
+                ventRoomIntent.putExtra("userName", userName);
+                mContext.startActivity(ventRoomIntent);
+            }
         }
     }
 
@@ -57,8 +61,10 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_vent_rooms);
         mContext = this;
-        mVentRoomRecyclerView = (RecyclerView) findViewById(R.id.ventRoomsRecyclerView);
-        mLinearLayoutManager = new LinearLayoutManager(this);
+        Intent intent = getIntent();
+        userName = intent.getStringExtra("userName");
+        mVentRoomsRecyclerView = (RecyclerView) findViewById(R.id.ventRoomsRecyclerView);
+        final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(false);
         mAuth = FirebaseAuth.getInstance();
 
@@ -77,6 +83,7 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
                         @Override
                         protected void populateViewHolder(ShortVentRoomViewHolder viewHolder, ShortVentRoom ventRoom, int position) {
                             viewHolder.ventRoomTitleTextView.setText(ventRoom.getTitle());
+                            viewHolder.ventRoomId = ventRoom.getRoomId();
                         }
                     };
 
@@ -87,8 +94,8 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
                         }
                     });
 
-                    mVentRoomRecyclerView.setLayoutManager(mLinearLayoutManager);
-                    mVentRoomRecyclerView.setAdapter(mFirebaseAdapter);
+                    mVentRoomsRecyclerView.setLayoutManager(mLinearLayoutManager);
+                    mVentRoomsRecyclerView.setAdapter(mFirebaseAdapter);
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {

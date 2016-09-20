@@ -51,10 +51,11 @@ public class StartVentingActivity extends AppCompatActivity {
         if (user != null) {
             if (ventRoomTitleEdit.getText().length() > 10) {
                 if (ventRoomTitleEdit.getText().length() < 100) {
-                    openNewVentRoom(user.getUid(), ventRoomTitleEdit.getText().toString(), System.currentTimeMillis()/1000);
-//        Intent startVentRoomIntent = new Intent(StartVentingActivity.this, VentRoomActivity.class);
-//        startVentRoomIntent.putExtra("ventRoomId", ventRoomId);
-//        startActivity(startVentRoomIntent);
+                    String ventRoomId = openNewVentRoom(user.getUid(), ventRoomTitleEdit.getText().toString(), System.currentTimeMillis()/1000);
+                    Intent startVentRoomIntent = new Intent(StartVentingActivity.this, VentRoomActivity.class);
+                    startVentRoomIntent.putExtra("ventRoomId", ventRoomId);
+                    startVentRoomIntent.putExtra("userName", "Venter");
+                    startActivity(startVentRoomIntent);
                 } else {
                     Toast.makeText(StartVentingActivity.this, "Title too long (more than 100 characters",
                             Toast.LENGTH_SHORT).show();
@@ -68,11 +69,14 @@ public class StartVentingActivity extends AppCompatActivity {
         }
     }
 
-    public void openNewVentRoom(String userId, String title, Long currentTime) {
+    public String openNewVentRoom(String userId, String title, Long currentTime) {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("ventRooms").child(String.valueOf(currentTime) + userId).child("title").setValue(title);
-        mDatabase.child("ventRooms").child(String.valueOf(currentTime) + userId).child("creationTime").setValue(currentTime);
-        mDatabase.child("ventRooms").child(String.valueOf(currentTime) + userId).child("venterId").setValue(userId);
+        String roomId = String.valueOf(currentTime) + userId;
+        mDatabase.child("ventRooms").child(roomId).child("title").setValue(title);
+        mDatabase.child("ventRooms").child(roomId).child("creationTime").setValue(currentTime);
+        mDatabase.child("ventRooms").child(roomId).child("venterId").setValue(userId);
+        mDatabase.child("ventRooms").child(roomId).child("roomId").setValue(roomId);
+        return (roomId);
     }
 
     @Override

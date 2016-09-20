@@ -1,5 +1,7 @@
 package com.example.florentremis.venting;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ViewVentRoomsActivity extends AppCompatActivity {
 
+    private static Context mContext;
     private static final String TAG = "ViewVentRoomsActivity";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -42,10 +45,10 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-//            LinearLayout ventRoomsLayout = (LinearLayout) v;
-//            LinearLayout ventRoomItemLayout = (LinearLayout) ventRoomsLayout.getChildAt(0);
             String title = ((TextView) v.findViewWithTag("ventRoomItem")).getText().toString();
-            Log.d(TAG, title);
+            Intent ventRoomIntent = new Intent(mContext, VentRoomActivity.class);
+            ventRoomIntent.putExtra("ventRoomTitle", title);
+            mContext.startActivity(ventRoomIntent);
         }
     }
 
@@ -53,6 +56,7 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_vent_rooms);
+        mContext = this;
         mVentRoomRecyclerView = (RecyclerView) findViewById(R.id.ventRoomsRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(false);
@@ -80,14 +84,6 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
                         @Override
                         public void onItemRangeInserted(int positionStart, int itemCount) {
                             super.onItemRangeInserted(positionStart, itemCount);
-                            int ventRoomsMessageCount = mFirebaseAdapter.getItemCount();
-                            int firstVisiblePosition = mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();
-                            // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
-                            // to the bottom of the list to show the newly added message.
-                            if (firstVisiblePosition == -1 ||
-                                    (positionStart >= (ventRoomsMessageCount - 1) && firstVisiblePosition == (positionStart - 1))) {
-                                mVentRoomRecyclerView.scrollToPosition(positionStart);
-                            }
                         }
                     });
 

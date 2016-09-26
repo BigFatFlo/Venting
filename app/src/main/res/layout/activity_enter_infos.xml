@@ -10,7 +10,7 @@
     tools:context="com.example.florentremis.venting.EnterInfosActivity">
 
     <TextView
-        android:id="@+id/select_sex"
+        android:id="@+id/selectSex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -18,36 +18,36 @@
         android:text="Select your sex" />
 
     <Spinner
-        android:id="@+id/select_sex_spinner"
+        android:id="@+id/selectSexSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/select_sex" />
+        android:layout_below="@id/selectSex" />
 
     <TextView
-        android:id="@+id/select_age"
+        android:id="@+id/selectAge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/select_sex_spinner"
+        android:layout_below="@id/selectSexSpinner"
         android:text="Select your age" />
 
     <Spinner
-        android:id="@+id/select_age_spinner"
+        android:id="@+id/selectAgeSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/select_age" />
+        android:layout_below="@id/selectAge" />
 
     <Button
-        android:id="@+id/start_vent_room_button"
+        android:id="@+id/startVentRoomButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/select_age_spinner"
+        android:layout_below="@id/selectAgeSpinner"
         android:text="View Vent Rooms"
         android:onClick="viewVentRooms"/>
 

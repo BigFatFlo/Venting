@@ -28,11 +28,12 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
     private static final String TAG = "ViewVentRoomsActivity";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    public static final String VENTROOMS_CHILD = "ventRooms";
+    public static final String VENTROOMS_AGE_SLOTS_CHILD = "ventRoomsAgeSlots";
     private RecyclerView mVentRoomsRecyclerView;
     private FirebaseRecyclerAdapter<ShortVentRoom, ShortVentRoomViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
     private static String userName = null;
+    private static String ageSlot = null;
 
     public static class ShortVentRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView ventRoomTitleTextView;
@@ -48,6 +49,7 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
         public void onClick(View v) {
             if (userName != null) {
                 String title = ((TextView) v.findViewWithTag("ventRoomItem")).getText().toString();
+                FirebaseDatabase.getInstance().getReference().child(VENTROOMS_AGE_SLOTS_CHILD).child(ageSlot).child(ventRoomId).removeValue();
                 Intent ventRoomIntent = new Intent(mContext, VentRoomActivity.class);
                 ventRoomIntent.putExtra("ventRoomId", ventRoomId);
                 ventRoomIntent.putExtra("userName", userName);
@@ -62,10 +64,15 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_vent_rooms);
         mContext = this;
         Intent intent = getIntent();
-        userName = intent.getStringExtra("userName");
+        int userAge = intent.getIntExtra("userAge", 0);
+        String userSex = intent.getStringExtra("userSex");
+        userName = String.valueOf(userAge) + userSex;
+        int ageRemainder = userAge % 5;
+        ageSlot = String.valueOf(userAge - ageRemainder) + userSex;
         mVentRoomsRecyclerView = (RecyclerView) findViewById(R.id.ventRoomsRecyclerView);
         final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
-        mLinearLayoutManager.setStackFromEnd(false);
+        mLinearLayoutManager.setStackFromEnd(true);
+        mLinearLayoutManager.setReverseLayout(true);
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -78,7 +85,7 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
                             ShortVentRoom.class,
                             R.layout.item_ventroom,
                             ShortVentRoomViewHolder.class,
-                            mFirebaseDatabaseReference.child(VENTROOMS_CHILD)) {
+                            mFirebaseDatabaseReference.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageSlot).orderByChild("creationTime")) {
 
                         @Override
                         protected void populateViewHolder(ShortVentRoomViewHolder viewHolder, ShortVentRoom ventRoom, int position) {

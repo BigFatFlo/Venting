@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Venting</string>
+    <string name="please_wait">Please wait.</string>
+    <string name="opening_ventroom">Opening VentRoom</string>
+    <string name="closing_ventroom">Closing VentRoom</string>
+    <string name="locking_ventroom">Locking VentRoom</string>
+    <string name="leave_ventroom_question">Leave VentRoom?</string>
+    <string name="close_ventroom_question">Close VentRoom?</string>
+    <string name="lock_ventroom_question">Lock VentRoom?</string>
+    <string name="this_will_close_the_ventroom_permanently">This will close the VentRoom permanently!</string>
+    <string name="people_wont_be_able_to_join_this_VentRoom_anymore">People won\'t be able to join this VentRoom anymore!</string>
+    <string name="leaving_will_close_the_ventroom_permanently">Leaving will close the VentRoom permanently!</string>
+    <string name="you_wont_be_able_to_join_this_ventroom_again">You won\'t be able to join this VentRoom again!</string>
 </resources>

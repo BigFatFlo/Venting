@@ -9,11 +9,46 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.florentremis.venting.VentRoomActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/leaveVentRoomButton"
+        android:text="Leave VentRoom"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:onClick="leaveVentRoom"/>
+
+    <LinearLayout
+        android:id="@+id/ventRoomButtonsLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/leaveVentRoomButton">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/lockVentRoomButton"
+            android:text="Lock VentRoom"
+            android:layout_weight="1"
+            android:onClick="lockVentRoom"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Close VentRoom"
+            android:id="@+id/closeVentRoomButton"
+            android:layout_weight="1"
+            android:onClick="closeVentRoom"/>
+
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ventRoomMessagesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ventRoomLinearLayout"/>
+        android:layout_above="@+id/ventRoomLinearLayout"
+        android:layout_below="@id/ventRoomButtonsLayout"/>
 
     <LinearLayout
         android:id="@id/ventRoomLinearLayout"

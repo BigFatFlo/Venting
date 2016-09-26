@@ -21,12 +21,12 @@ public class EnterInfosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_infos);
-        sexesSpinner = (Spinner) findViewById(R.id.select_sex_spinner);
-        agesSpinner = (Spinner) findViewById(R.id.select_age_spinner);
+        sexesSpinner = (Spinner) findViewById(R.id.selectSexSpinner);
+        agesSpinner = (Spinner) findViewById(R.id.selectAgeSpinner);
 
         listSexes.add("Male");
         listSexes.add("Female");
-        for (int i = 0; i < 100; i++) {
+        for (int i = 15; i < 100; i++) {
             listAges.add(String.valueOf(i));
         }
 
@@ -49,8 +49,9 @@ public class EnterInfosActivity extends AppCompatActivity {
         } else if (selectedSex.contentEquals("Female")) {
             selectedSex = "F";
         }
-        String selectedAge = agesSpinner.getSelectedItem().toString();
-        viewVentRoomsIntent.putExtra("userName", selectedAge + selectedSex);
+        int selectedAge = Integer.parseInt(agesSpinner.getSelectedItem().toString());
+        viewVentRoomsIntent.putExtra("userAge", selectedAge);
+        viewVentRoomsIntent.putExtra("userSex", selectedSex);
         startActivity(viewVentRoomsIntent);
     }
 

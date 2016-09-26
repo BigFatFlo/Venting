@@ -18,18 +18,18 @@
         android:text="Choose a title for your Vent Room" />
 
     <EditText
-        android:id="@+id/title_edit_text"
+        android:id="@+id/titleEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLength="100"
         android:layout_below="@id/choose_title" />
 
     <Button
-        android:id="@+id/start_vent_room_button"
+        android:id="@+id/startVentRoomButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/title_edit_text"
+        android:layout_below="@id/titleEditText"
         android:text="Start Vent Room"
         android:onClick="startVentRoom"/>
 

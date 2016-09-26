@@ -1,5 +1,6 @@
 package com.example.florentremis.venting;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ServerValue;
 
 public class StartVentingActivity extends AppCompatActivity {
 
@@ -25,12 +27,30 @@ public class StartVentingActivity extends AppCompatActivity {
     int i = 0;
     private FirebaseUser user;
     public EditText ventRoomTitleEdit;
+    private static final String[] ageCategories =  {
+            "15F", "20F", "25F", "30F", "35F",
+            "40F", "45F", "50F", "55F", "60F",
+            "65F", "70F", "75F", "80F", "85F",
+            "90F", "95F", "15M", "20M", "25M",
+            "30M", "35M", "40M", "45M", "50M",
+            "55M", "60M", "65M", "70M", "75M",
+            "80M", "85M", "90M", "95M"};
+    private static final long VENTROOM_TIMEOUT = 60*60*1000; // 1 hour
+    public static final String VENTROOMS_AGE_SLOTS_CHILD = "ventRoomsAgeSlots";
+    public static final String VENTROOMS_CHILD = "ventRooms";
+    public static final String TIME_LEFT_CHILD = "timeLeft";
+    public static final String LAST_UPDATE_TIME_CHILD = "lastUpdateTime";
+    public static final String VENTROOM_TITLE_CHILD = "title";
+    public static final String CREATION_TIME_CHILD = "creationTime";
+    public static final String VENTER_ID_CHILD = "venterId";
+    public static final String VENTROOM_ID_CHILD = "roomId";
+    public static final String LOCKED_CHILD = "locked";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_venting);
-        ventRoomTitleEdit = (EditText) findViewById(R.id.title_edit_text);
+        ventRoomTitleEdit = (EditText) findViewById(R.id.titleEditText);
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -70,12 +90,26 @@ public class StartVentingActivity extends AppCompatActivity {
     }
 
     public String openNewVentRoom(String userId, String title, Long currentTime) {
+        final ProgressDialog dlg = new ProgressDialog(StartVentingActivity.this);
+        dlg.setTitle(getResources().getString(R.string.please_wait));
+        dlg.setMessage(getResources().getString(R.string.opening_ventroom));
+        dlg.show();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         String roomId = String.valueOf(currentTime) + userId;
-        mDatabase.child("ventRooms").child(roomId).child("title").setValue(title);
-        mDatabase.child("ventRooms").child(roomId).child("creationTime").setValue(currentTime);
-        mDatabase.child("ventRooms").child(roomId).child("venterId").setValue(userId);
-        mDatabase.child("ventRooms").child(roomId).child("roomId").setValue(roomId);
+        for (int i = 0; i < ageCategories.length; i++) {
+            mDatabase.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageCategories[i]).child(roomId).child(VENTROOM_TITLE_CHILD).setValue(title);
+            mDatabase.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageCategories[i]).child(roomId).child(CREATION_TIME_CHILD).setValue(ServerValue.TIMESTAMP);
+            mDatabase.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageCategories[i]).child(roomId).child(VENTER_ID_CHILD).setValue(userId);
+            mDatabase.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageCategories[i]).child(roomId).child(VENTROOM_ID_CHILD).setValue(roomId);
+        }
+        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(VENTROOM_TITLE_CHILD).setValue(title);
+        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(CREATION_TIME_CHILD).setValue(ServerValue.TIMESTAMP);
+        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(LAST_UPDATE_TIME_CHILD).setValue(ServerValue.TIMESTAMP);
+        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(VENTER_ID_CHILD).setValue(userId);
+        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(VENTROOM_ID_CHILD).setValue(roomId);
+        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(TIME_LEFT_CHILD).setValue(VENTROOM_TIMEOUT);
+        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(LOCKED_CHILD).setValue(false);
+        dlg.dismiss();
         return (roomId);
     }
 

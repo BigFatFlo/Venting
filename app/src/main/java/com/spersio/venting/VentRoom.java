@@ -1,25 +1,30 @@
-package com.example.florentremis.venting;
+package com.spersio.venting;
 
 import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class VentRoomsAgeSlot {
+public class VentRoom {
 
     private String title;
     private String roomId;
     private long creationTime;
+    private long lastUpdateTime;
+    private long timeLeft;
+    private Boolean locked;
     private String venterId;
 
-
-    public VentRoomsAgeSlot() {
+    public VentRoom() {
     }
 
-    public VentRoomsAgeSlot(String title, String roomId, long creationTime, String venterId) {
+    public VentRoom(String title, String roomId, long creationTime, long lastUpdateTime, long timeLeft, Boolean locked, String venterId) {
         this.title = title;
         this.roomId = roomId;
         this.creationTime = creationTime;
+        this.lastUpdateTime = lastUpdateTime;
+        this.timeLeft = timeLeft;
+        this.locked = locked;
         this.venterId = venterId;
     }
 
@@ -47,6 +52,30 @@ public class VentRoomsAgeSlot {
         this.creationTime = creationTime;
     }
 
+    public long getLastUpdateTime() {
+        return lastUpdateTime;
+    }
+
+    public void setLastUpdateTime(long lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
+    }
+
+    public long getTimeLeft() {
+        return timeLeft;
+    }
+
+    public void setTimeLeft(long timeLeft) {
+        this.timeLeft = timeLeft;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
     public String getVenterId() {
         return venterId;
     }
@@ -61,6 +90,9 @@ public class VentRoomsAgeSlot {
         result.put("title", title);
         result.put("roomId", roomId);
         result.put("creationTime", creationTime);
+        result.put("lastUpdateTime", lastUpdateTime);
+        result.put("timeLeft", timeLeft);
+        result.put("locked", locked);
         result.put("venterId", venterId);
 
         return result;

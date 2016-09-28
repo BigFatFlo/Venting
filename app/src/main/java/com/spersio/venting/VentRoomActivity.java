@@ -1,4 +1,4 @@
-package com.example.florentremis.venting;
+package com.spersio.venting;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -42,8 +42,8 @@ public class VentRoomActivity extends AppCompatActivity {
     public static final String MESSAGES_CHILD = "messages";
     public static final String TIME_LEFT_CHILD = "timeLeft";
     public static final String LAST_UPDATE_TIME_CHILD = "lastUpdateTime";
-    private static final int VENTROOM_TIMEOUT = 2*60*1000; // 1 hour, 1 min
-    private static final int VENTROOM_LIFESPAN = 60*1000; // 1 hour
+    private static final int VENTROOM_TIMEOUT = 2*60*60*1000; // 1 hour, 1 min
+    private static final int VENTROOM_LIFESPAN = 60*60*1000; // 1 hour
     private RecyclerView mVentRoomMessagesRecyclerView;
     private FirebaseRecyclerAdapter<VentRoomMessage, VentRoomMessageViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;

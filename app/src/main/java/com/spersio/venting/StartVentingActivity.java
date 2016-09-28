@@ -1,4 +1,4 @@
-package com.example.florentremis.venting;
+package com.spersio.venting;
 
 import android.app.ProgressDialog;
 import android.content.Intent;

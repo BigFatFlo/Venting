@@ -1,24 +1,24 @@
-package com.example.florentremis.venting;
+package com.spersio.venting;
 
 import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class VentRoom {
+public class VentRoomStringTimes {
 
     private String title;
     private String roomId;
-    private long creationTime;
-    private long lastUpdateTime;
+    private Map<String, String> creationTime;
+    private Map<String, String> lastUpdateTime;
     private long timeLeft;
     private Boolean locked;
     private String venterId;
 
-    public VentRoom() {
+    public VentRoomStringTimes() {
     }
 
-    public VentRoom(String title, String roomId, long creationTime, long lastUpdateTime, long timeLeft, Boolean locked, String venterId) {
+    public VentRoomStringTimes(String title, String roomId, Map<String, String> creationTime, Map<String, String> lastUpdateTime, long timeLeft, Boolean locked, String venterId) {
         this.title = title;
         this.roomId = roomId;
         this.creationTime = creationTime;
@@ -44,19 +44,19 @@ public class VentRoom {
         this.roomId = roomId;
     }
 
-    public long getCreationTime() {
+    public Map<String, String> getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(long creationTime) {
+    public void setCreationTime(Map<String, String> creationTime) {
         this.creationTime = creationTime;
     }
 
-    public long getLastUpdateTime() {
+    public Map<String, String> getLastUpdateTime() {
         return lastUpdateTime;
     }
 
-    public void setLastUpdateTime(long lastUpdateTime) {
+    public void setLastUpdateTime(Map<String, String> lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
     }
 

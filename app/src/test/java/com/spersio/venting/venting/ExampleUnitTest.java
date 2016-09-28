@@ -1,4 +1,4 @@
-package com.example.florentremis.venting;
+package com.spersio.venting.venting;
 
 import org.junit.Test;
 

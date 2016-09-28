@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ServerValue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class StartVentingActivity extends AppCompatActivity {
 
     private static final String TAG = "ViewVentRoomsActivity";
@@ -35,7 +38,7 @@ public class StartVentingActivity extends AppCompatActivity {
             "30M", "35M", "40M", "45M", "50M",
             "55M", "60M", "65M", "70M", "75M",
             "80M", "85M", "90M", "95M"};
-    private static final long VENTROOM_TIMEOUT = 60*60*1000; // 1 hour
+    private static final long VENTROOM_TIMEOUT = 60*1000; // 1 hour
     public static final String VENTROOMS_AGE_SLOTS_CHILD = "ventRoomsAgeSlots";
     public static final String VENTROOMS_CHILD = "ventRooms";
     public static final String TIME_LEFT_CHILD = "timeLeft";
@@ -96,19 +99,20 @@ public class StartVentingActivity extends AppCompatActivity {
         dlg.show();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         String roomId = String.valueOf(currentTime) + userId;
+        VentRoomStringTimes ventRoom = new VentRoomStringTimes(title, roomId, ServerValue.TIMESTAMP, ServerValue.TIMESTAMP, VENTROOM_TIMEOUT, false, userId);
+        VentRoomsAgeSlotStringTime ventRoomsAgeSlot = new VentRoomsAgeSlotStringTime(title, roomId, ServerValue.TIMESTAMP, userId);
+        Map<String, Object> ventRoomValues = ventRoom.toMap();
+        Map<String, Object> ventRoomsAgeSlotValues = ventRoomsAgeSlot.toMap();
+
+        Map<String, Object> childVentRoomUpdates = new HashMap<>();
+        Map<String, Object> childVentRoomsAgeSlotUpdates = new HashMap<>();
+
         for (int i = 0; i < ageCategories.length; i++) {
-            mDatabase.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageCategories[i]).child(roomId).child(VENTROOM_TITLE_CHILD).setValue(title);
-            mDatabase.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageCategories[i]).child(roomId).child(CREATION_TIME_CHILD).setValue(ServerValue.TIMESTAMP);
-            mDatabase.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageCategories[i]).child(roomId).child(VENTER_ID_CHILD).setValue(userId);
-            mDatabase.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageCategories[i]).child(roomId).child(VENTROOM_ID_CHILD).setValue(roomId);
+            childVentRoomsAgeSlotUpdates.put("/" + VENTROOMS_AGE_SLOTS_CHILD + "/" + ageCategories[i] + "/" + roomId, ventRoomsAgeSlotValues);
         }
-        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(VENTROOM_TITLE_CHILD).setValue(title);
-        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(CREATION_TIME_CHILD).setValue(ServerValue.TIMESTAMP);
-        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(LAST_UPDATE_TIME_CHILD).setValue(ServerValue.TIMESTAMP);
-        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(VENTER_ID_CHILD).setValue(userId);
-        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(VENTROOM_ID_CHILD).setValue(roomId);
-        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(TIME_LEFT_CHILD).setValue(VENTROOM_TIMEOUT);
-        mDatabase.child(VENTROOMS_CHILD).child(roomId).child(LOCKED_CHILD).setValue(false);
+        mDatabase.updateChildren(childVentRoomsAgeSlotUpdates);
+        childVentRoomUpdates.put("/" + VENTROOMS_CHILD + "/" + roomId, ventRoomValues);
+        mDatabase.updateChildren(childVentRoomUpdates);
         dlg.dismiss();
         return (roomId);
     }

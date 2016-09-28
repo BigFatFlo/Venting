@@ -1,7 +1,6 @@
 package com.example.florentremis.venting;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.CountDownTimer;
@@ -18,13 +17,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.support.v7.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +28,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class VentRoomActivity extends AppCompatActivity {
 
@@ -44,8 +42,8 @@ public class VentRoomActivity extends AppCompatActivity {
     public static final String MESSAGES_CHILD = "messages";
     public static final String TIME_LEFT_CHILD = "timeLeft";
     public static final String LAST_UPDATE_TIME_CHILD = "lastUpdateTime";
-    private static final int VENTROOM_TIMEOUT = 61*60*1000; // 1 hour, 1 min
-    private static final int VENTROOM_LIFESPAN = 60*60*1000; // 1 hour
+    private static final int VENTROOM_TIMEOUT = 2*60*1000; // 1 hour, 1 min
+    private static final int VENTROOM_LIFESPAN = 60*1000; // 1 hour
     private RecyclerView mVentRoomMessagesRecyclerView;
     private FirebaseRecyclerAdapter<VentRoomMessage, VentRoomMessageViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
@@ -113,13 +111,13 @@ public class VentRoomActivity extends AppCompatActivity {
         }
         if (user != null) {
             mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-            countDownTimer = new CountDownTimer(VENTROOM_TIMEOUT, 30000) {
+            countDownTimer = new CountDownTimer(VENTROOM_TIMEOUT, 3000) {
                 public void onTick(long millisUntilFinished) {
                     mFirebaseDatabaseReference.child(VENTROOMS_CHILD).child(ventRoomId).addListenerForSingleValueEvent(
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                ShortVentRoom ventRoom = dataSnapshot.getValue(ShortVentRoom.class);
+                                VentRoom ventRoom = dataSnapshot.getValue(VentRoom.class);
                                 if (ventRoom.getTimeLeft() <= 0) {
                                     ventRoomLocked = ventRoom.getLocked();
                                     userName = "Venter";
@@ -322,17 +320,22 @@ public class VentRoomActivity extends AppCompatActivity {
     }
 
     protected void deleteVentRoom(Boolean ventRoomLocked) {
-        mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(ventRoomId).removeValue();
-        mFirebaseDatabaseReference.child(VENTROOMS_CHILD).child(ventRoomId).removeValue();
+        Map<String, Object> childVentRoomUpdates = new HashMap<>();
+        childVentRoomUpdates.put("/" + MESSAGES_CHILD + "/" + ventRoomId, null);
+        childVentRoomUpdates.put("/" + VENTROOMS_CHILD + "/" + ventRoomId, null);
+        mFirebaseDatabaseReference.updateChildren(childVentRoomUpdates);
         if (!ventRoomLocked) {
             deleteVentRoomAgeSlots();
         }
     }
 
     protected void deleteVentRoomAgeSlots() {
+        Map<String, Object> childVentRoomsAgeSlotUpdates = new HashMap<>();
+
         for (int i = 0; i < ageCategories.length; i++) {
-            mFirebaseDatabaseReference.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageCategories[i]).child(ventRoomId).removeValue();
+            childVentRoomsAgeSlotUpdates.put("/" + VENTROOMS_AGE_SLOTS_CHILD + "/" + ageCategories[i] + "/" + ventRoomId, null);
         }
+        mFirebaseDatabaseReference.updateChildren(childVentRoomsAgeSlotUpdates);
     }
 
     @Override
@@ -350,19 +353,20 @@ public class VentRoomActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        countDownTimer.cancel();
         if (userName.contentEquals("Venter")) {
             if (!ventRoomClosed) {
                 deleteVentRoom(ventRoomLocked);
             }
         }
+        super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(VentRoomActivity.this);
         alertDialogBuilder.setTitle(R.string.leave_ventroom_question);
-        if (userName == "Venter") {
+        if (userName.contentEquals("Venter")) {
             closeVentRoom(null, R.string.leaving_will_close_the_ventroom_permanently);
         } else {
             leaveVentRoom(null);

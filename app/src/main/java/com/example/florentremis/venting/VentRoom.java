@@ -1,6 +1,11 @@
 package com.example.florentremis.venting;
 
-public class ShortVentRoom {
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class VentRoom {
 
     private String title;
     private String roomId;
@@ -8,17 +13,19 @@ public class ShortVentRoom {
     private long lastUpdateTime;
     private long timeLeft;
     private Boolean locked;
+    private String venterId;
 
-    public ShortVentRoom() {
+    public VentRoom() {
     }
 
-    public ShortVentRoom(String title, String roomId, long creationTime, long lastUpdateTime, long timeLeft, Boolean locked) {
+    public VentRoom(String title, String roomId, long creationTime, long lastUpdateTime, long timeLeft, Boolean locked, String venterId) {
         this.title = title;
         this.roomId = roomId;
         this.creationTime = creationTime;
         this.lastUpdateTime = lastUpdateTime;
         this.timeLeft = timeLeft;
         this.locked = locked;
+        this.venterId = venterId;
     }
 
     public String getTitle() {
@@ -67,5 +74,27 @@ public class ShortVentRoom {
 
     public void setLocked(Boolean locked) {
         this.locked = locked;
+    }
+
+    public String getVenterId() {
+        return venterId;
+    }
+
+    public void setVenterId(String venterId) {
+        this.venterId = roomId;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("title", title);
+        result.put("roomId", roomId);
+        result.put("creationTime", creationTime);
+        result.put("lastUpdateTime", lastUpdateTime);
+        result.put("timeLeft", timeLeft);
+        result.put("locked", locked);
+        result.put("venterId", venterId);
+
+        return result;
     }
 }

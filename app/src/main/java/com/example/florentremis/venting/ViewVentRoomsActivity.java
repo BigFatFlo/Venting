@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +29,7 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     public static final String VENTROOMS_AGE_SLOTS_CHILD = "ventRoomsAgeSlots";
     private RecyclerView mVentRoomsRecyclerView;
-    private FirebaseRecyclerAdapter<ShortVentRoom, ShortVentRoomViewHolder> mFirebaseAdapter;
+    private FirebaseRecyclerAdapter<VentRoom, ShortVentRoomViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
     private static String userName = null;
     private static String ageSlot = null;
@@ -81,14 +80,14 @@ public class ViewVentRoomsActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-                    mFirebaseAdapter = new FirebaseRecyclerAdapter<ShortVentRoom, ShortVentRoomViewHolder>(
-                            ShortVentRoom.class,
+                    mFirebaseAdapter = new FirebaseRecyclerAdapter<VentRoom, ShortVentRoomViewHolder>(
+                            VentRoom.class,
                             R.layout.item_ventroom,
                             ShortVentRoomViewHolder.class,
                             mFirebaseDatabaseReference.child(VENTROOMS_AGE_SLOTS_CHILD).child(ageSlot).orderByChild("creationTime")) {
 
                         @Override
-                        protected void populateViewHolder(ShortVentRoomViewHolder viewHolder, ShortVentRoom ventRoom, int position) {
+                        protected void populateViewHolder(ShortVentRoomViewHolder viewHolder, VentRoom ventRoom, int position) {
                             viewHolder.ventRoomTitleTextView.setText(ventRoom.getTitle());
                             viewHolder.ventRoomId = ventRoom.getRoomId();
                         }
